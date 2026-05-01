@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import useScormApi from './useScormApi';
+import useScormApi from '../hooks/useScormApi';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/scorm-lms';
 
