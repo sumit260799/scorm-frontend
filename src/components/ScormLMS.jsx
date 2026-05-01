@@ -10,7 +10,7 @@ const ScormLMS = () => {
 
   useScormApi();
 
-  // Function to refresh the list manually (used after upload)
+  // Logic remains identical to your original code
   const refreshList = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/courses`);
@@ -23,7 +23,6 @@ const ScormLMS = () => {
 
   useEffect(() => {
     let active = true;
-
     const fetchInitialCourses = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/courses`);
@@ -33,9 +32,7 @@ const ScormLMS = () => {
         if (active) console.error(err);
       }
     };
-
     fetchInitialCourses();
-
     return () => {
       active = false;
     };
@@ -66,66 +63,133 @@ const ScormLMS = () => {
   };
 
   return (
-    <div className='min-h-screen bg-slate-950 p-8 text-white font-sans'>
-      <div className='max-w-6xl mx-auto'>
-        <header className='mb-12'>
-          <h1 className='text-4xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 bg-clip-text text-transparent'>
-            SIKSA
-          </h1>
-          <p className='text-slate-400 mt-2'>
-            Professional SCORM Learning Management
-          </p>
+    <div className='min-h-screen bg-[#09090b] text-zinc-100 font-sans selection:bg-blue-500/30'>
+      {/* Professional Top Navigation */}
+      <nav className='sticky top-0 z-50 border-b border-zinc-800 bg-[#09090b]/80 backdrop-blur-md'>
+        <div className='max-w-7xl mx-auto px-6 h-16 flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            <div className='w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-black text-white italic shadow-lg shadow-blue-500/20'>
+              S
+            </div>
+            <span className='font-bold tracking-tight text-xl'>SIKSA</span>
+          </div>
+
+          <div className='hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400'>
+            <a href='#' className='hover:text-white transition-colors'>
+              Dashboard
+            </a>
+            <a href='#' className='hover:text-white transition-colors'>
+              Course Library
+            </a>
+            <a href='#' className='hover:text-white transition-colors'>
+              Settings
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <div className='max-w-7xl mx-auto px-6 py-10'>
+        {/* Header Section */}
+        <header className='mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6'>
+          <div>
+            <h1 className='text-3xl font-semibold tracking-tight text-white'>
+              Repository
+            </h1>
+            <p className='text-zinc-500 mt-1 max-w-md'>
+              Access and manage your professional SCORM-compliant training
+              modules.
+            </p>
+          </div>
         </header>
 
-        <section className='mb-12 bg-white/5 backdrop-blur-2xl border border-white/10 p-8 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)]'>
-          <h2 className='text-xl mb-6 font-bold flex items-center gap-2'>
-            <span className='w-2 h-2 bg-blue-500 rounded-full animate-pulse' />
-            Upload New Content
-          </h2>
+        {/* Professional Upload Section */}
+        <section className='mb-12 bg-zinc-900/50 border border-zinc-800 p-1 rounded-2xl shadow-sm'>
           <form
             onSubmit={handleUpload}
-            className='flex flex-col md:flex-row gap-6 items-center'
+            className='flex flex-col md:flex-row gap-2 items-center'
           >
-            <div className='relative group w-full'>
+            <div className='relative flex-1 w-full'>
               <input
+                id='file-upload'
                 type='file'
                 onChange={e => setFile(e.target.files[0])}
-                className='w-full text-sm text-slate-400 file:mr-6 file:py-3 file:px-8 file:rounded-full file:border-0 file:bg-gradient-to-br file:from-blue-600 file:to-indigo-600 file:text-white file:font-bold hover:file:opacity-90 cursor-pointer'
+                className='hidden'
                 required
               />
+              <label
+                htmlFor='file-upload'
+                className='flex items-center gap-3 w-full px-5 py-3 rounded-xl cursor-pointer hover:bg-zinc-800/50 transition-colors border border-transparent active:border-zinc-700'
+              >
+                <span className='p-2 bg-zinc-800 rounded-lg text-zinc-400'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='18'
+                    height='18'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  >
+                    <path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4' />
+                    <polyline points='17 8 12 3 7 8' />
+                    <line x1='12' x2='12' y1='3' y2='15' />
+                  </svg>
+                </span>
+                <span className='text-sm font-medium text-zinc-300'>
+                  {file ? file.name : 'Select SCORM package (ZIP)'}
+                </span>
+              </label>
             </div>
+
             <button
               type='submit'
-              disabled={loading}
-              className='w-full md:w-auto px-12 py-3 bg-white text-slate-950 rounded-full font-black hover:bg-blue-400 hover:scale-105 transition-all duration-300 disabled:opacity-50'
+              disabled={loading || !file}
+              className='w-full md:w-auto px-8 py-3 bg-white text-black rounded-xl font-semibold hover:bg-zinc-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2'
             >
-              {loading ? 'PROCESSING...' : 'ADD TO LIBRARY'}
+              {loading ? (
+                <>
+                  <div className='w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin' />
+                  PROCESSING...
+                </>
+              ) : (
+                'ADD TO LIBRARY'
+              )}
             </button>
           </form>
         </section>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10'>
+        {/* Course Grid */}
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
           {courses.map(course => (
             <div
               key={course.courseId}
-              className='group bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden hover:bg-white/10 transition-all duration-500'
+              className='group bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-600 transition-all duration-300 flex flex-col'
             >
-              <div className='relative h-56'>
+              <div className='relative aspect-video overflow-hidden'>
                 <img
                   src={course.thumbnail}
                   alt={course.title}
-                  className='w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700'
+                  className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
                 />
-                <div className='absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent' />
+                <div className='absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent' />
+                <div className='absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity'>
+                  <span className='px-2 py-1 bg-zinc-900/80 backdrop-blur text-[10px] font-bold rounded border border-zinc-700'>
+                    SCORM 1.2
+                  </span>
+                </div>
               </div>
 
-              <div className='p-6'>
-                <h3 className='font-black text-xl mb-2 text-slate-100 group-hover:text-blue-400 transition-colors'>
-                  {course.title}
-                </h3>
-                <p className='text-slate-500 text-sm font-medium mb-6 uppercase tracking-widest'>
-                  {course.publisher}
-                </p>
+              <div className='p-5 flex flex-col flex-1'>
+                <div className='flex-1'>
+                  <p className='text-blue-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-2'>
+                    {course.publisher || 'General Content'}
+                  </p>
+                  <h3 className='font-semibold text-lg leading-tight text-zinc-100 group-hover:text-white transition-colors line-clamp-2 mb-4'>
+                    {course.title}
+                  </h3>
+                </div>
 
                 <button
                   onClick={() =>
@@ -134,8 +198,21 @@ const ScormLMS = () => {
                       '_blank'
                     )
                   }
-                  className='w-full py-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 rounded-2xl font-bold hover:bg-blue-500 hover:text-white transition-all duration-300'
+                  className='w-full py-2.5 bg-zinc-800 hover:bg-blue-600 text-zinc-200 hover:text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2'
                 >
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='14'
+                    height='14'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  >
+                    <polygon points='5 3 19 12 5 21 5 3' />
+                  </svg>
                   LAUNCH MODULE
                 </button>
               </div>
@@ -143,10 +220,28 @@ const ScormLMS = () => {
           ))}
         </div>
 
+        {/* Empty State */}
         {courses.length === 0 && !loading && (
-          <div className='text-center py-32'>
-            <p className='text-slate-600 font-medium italic'>
-              Your repository is currently empty.
+          <div className='text-center py-24 bg-zinc-900/20 border-2 border-dashed border-zinc-800 rounded-3xl'>
+            <div className='w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4 text-zinc-500'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='24'
+                height='24'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              >
+                <rect x='2' y='7' width='20' height='14' rx='2' ry='2' />
+                <path d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16' />
+              </svg>
+            </div>
+            <p className='text-zinc-400 font-medium'>No modules available.</p>
+            <p className='text-zinc-600 text-sm mt-1'>
+              Your uploaded courses will appear here.
             </p>
           </div>
         )}
