@@ -1,5 +1,9 @@
 import {useEffect} from 'react';
 
+/**
+ * Hook to initialize the SCORM 1.2 API for the Siksa platform.
+ * This ensures window.API is available for the course content.
+ */
 const useScormApi = () => {
   useEffect(() => {
     window.API = (() => {
@@ -11,19 +15,19 @@ const useScormApi = () => {
           if (initialized) return 'false';
           initialized = true;
           terminated = false;
-          console.log('🚀 SCORM Initialized');
+          console.log('🚀 SIKSA: SCORM Initialized');
           return 'true';
         },
 
         LMSFinish: () => {
           if (!initialized || terminated) return 'false';
           terminated = true;
-          console.log('🏁 SCORM Finished');
+          console.log('🏁 SIKSA: SCORM Finished');
           return 'true';
         },
 
         LMSGetValue: key => {
-          console.log('📥 GET:', key);
+          console.log('📥 SIKSA GET:', key);
           switch (key) {
             case 'cmi.core.student_id':
               return 'USER_001';
@@ -39,7 +43,7 @@ const useScormApi = () => {
         },
 
         LMSSetValue: (key, value) => {
-          console.log('📤 SET:', key, value);
+          console.log('📤 SIKSA SET:', key, value);
           if (key === 'cmi.suspend_data') {
             localStorage.setItem('suspend_data', value);
           }
@@ -49,7 +53,7 @@ const useScormApi = () => {
 
         LMSCommit: () => {
           if (!initialized) return 'false';
-          console.log('💾 Commit to LMS');
+          console.log('💾 SIKSA: Progress Saved');
           return 'true';
         },
 
